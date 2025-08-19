@@ -1,5 +1,6 @@
 package com.kt.api_messaging_svc.controller;
 
+import com.kt.api_messaging_svc.dto.MessageResponse;
 import com.kt.api_messaging_svc.dto.SendMessageRequest;
 import com.kt.api_messaging_svc.dto.StatusCallbackRequest;
 import com.kt.api_messaging_svc.entity.Messages;
@@ -9,8 +10,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/message")
+@RequestMapping("/api/v1/messages")
 @AllArgsConstructor
 public class MessageController {
     private final MessageService messageService;
@@ -32,5 +35,12 @@ public class MessageController {
                 req.getErrorCode(),
                 req.getErrorMessage());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public List<MessageResponse> findByUserEmail(
+            @RequestParam String userEmail
+    ) {
+        return messageService.getMessagesByUserEmail(userEmail);
     }
 }

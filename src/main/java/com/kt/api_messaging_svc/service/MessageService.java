@@ -1,5 +1,6 @@
 package com.kt.api_messaging_svc.service;
 
+import com.kt.api_messaging_svc.dto.MessageResponse;
 import com.kt.api_messaging_svc.entity.MessageRecipient;
 import com.kt.api_messaging_svc.entity.Messages;
 import com.kt.api_messaging_svc.repository.MessageRecipientRepository;
@@ -57,7 +58,7 @@ public class MessageService {
                                         new com.twilio.type.PhoneNumber(from),
                                         body
                                 )
-                                .setStatusCallback(URI.create("https://c58d52d7af88.ngrok-free.app/api/v1/message/status"))
+                                .setStatusCallback(URI.create("https://c58d52d7af88.ngrok-free.app/api/v1/messages/status"))
                                 .create();
 
                 // 성공 → provider_sid만 세팅(나머지는 null 유지 가능)
@@ -94,5 +95,12 @@ public class MessageService {
         }
 
         return messagesEntity;
+    }
+
+    public List<MessageResponse> getMessagesByUserEmail(String userEmail) {
+        return messageRepository.findByUserEmailOrderByCreatedAtDesc(userEmail)
+                .stream()
+                .map(MessageResponse::from)
+                .toList();
     }
 }
