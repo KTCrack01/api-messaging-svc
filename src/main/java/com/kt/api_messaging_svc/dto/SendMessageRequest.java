@@ -12,7 +12,6 @@ import java.util.List;
 public class SendMessageRequest {
     private String userEmail;
     private String body;
-    private String from;
     private List<String> recipients;
 }
 

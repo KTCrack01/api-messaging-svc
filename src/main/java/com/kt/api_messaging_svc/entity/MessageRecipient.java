@@ -32,15 +32,37 @@ public class MessageRecipient {
     @Column(name = "status", length = 255)
     private String status;
 
+    @Column(name = "provider_sid")
+    private String providerSid;
+
+    @Column(name = "last_error")
+    private String lastError;
+
     protected MessageRecipient(){
     }
 
+    public void setProviderSid(String providerSid) {
+        this.providerSid = providerSid;
+    }
+
+    public void markDelivered(LocalDateTime ts) {
+        this.status = "delivered";
+        this.deliveredAt = ts;
+    }
+
+    public void markFailed(String err) {
+        this.status = "failed";
+        this.lastError = err;
+    }
+
     @Builder
-    public MessageRecipient(Messages messages, String phoneNum, LocalDateTime sendAt, LocalDateTime deliveredAt, String status) {
+    public MessageRecipient(Messages messages, String phoneNum, LocalDateTime sendAt, LocalDateTime deliveredAt, String status, String providerSid, String lastError) {
         this.messages = messages;
         this.phoneNum = phoneNum;
         this.sendAt = sendAt;
         this.deliveredAt = deliveredAt;
         this.status = status;
+        this.providerSid = providerSid;
+        this.lastError = lastError;
     }
 }
