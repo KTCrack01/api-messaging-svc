@@ -1,24 +1,74 @@
-# Compiled class file
-*.class
+# --- OS / 에디터 공통 ---
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.swo
 
-# Log file
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+out/
+
+# --- Gradle ---
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar   # 래퍼 JAR은 포함해야 함
+gradle-app.setting
+
+# --- 로그 / 캐시 / 리포트 ---
 *.log
+logs/
+*.tmp
+tmp/
+.cache/
+.jacoco/
+coverage/
 
-# BlueJ files
-*.ctxt
+# --- 테스트 산출물 ---
+test-output/
+surefire-reports/
+failsafe-reports/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# --- Java / 도구 산출물 ---
+*.class
+target/               # (Maven 쓸 때 대비)
+bin/
 
-# Package Files #
+# --- 번들 / 압축물(산출물) ---
 *.jar
 *.war
 *.nar
 *.ear
 *.zip
+*.tar
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# --- 크래시 덤프 ---
 hs_err_pid*
 replay_pid*
+
+# --- 비밀/자격증명(절대 올리지 않기) ---
+# 환경변수 파일
+.env
+.env.*
+#.env.local   # 필요하면 활성화
+
+# 앱 시크릿/개인 설정(이름 규칙에 맞게 추가)
+*.secret.*
+*secret*.properties
+*.properties.local
+application-secret.properties
+src/main/resources/application-secret.properties
+
+# 인증서/키/스토어
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# --- 빌드 시 생성되는 리소스(예: properties가 복사되어 들어가는 곳) ---
+build/resources/
