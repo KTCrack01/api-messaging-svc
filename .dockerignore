@@ -1,0 +1,33 @@
+# Gradle 빌드 파일들
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE 관련 파일들
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+.vscode/
+
+# OS 관련 파일들
+.DS_Store
+Thumbs.db
+
+# 로그 파일들
+*.log
+
+# 시크릿 파일들 (이미지에 포함되지 않도록)
+**/application-secret.properties
+
+# Git 관련
+.git
+.gitignore
+
+# 기타
+README.md
+Dockerfile
+.dockerignore
