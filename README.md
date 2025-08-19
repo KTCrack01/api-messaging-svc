@@ -1,1 +1,1 @@
-# api-sending-svc
+# api-messaging-svc
