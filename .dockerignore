@@ -1,0 +1,80 @@
+# --- OS / 에디터 공통 ---
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.swo
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+out/
+
+# --- Gradle ---
+.gradle/
+build/
+gradle-app.setting
+
+# --- 로그 / 캐시 / 리포트 ---
+*.log
+logs/
+*.tmp
+tmp/
+.cache/
+.jacoco/
+coverage/
+
+# --- 테스트 산출물 ---
+test-output/
+surefire-reports/
+failsafe-reports/
+
+# --- Java / 도구 산출물 ---
+*.class
+target/
+bin/
+
+# --- 번들 / 압축물(산출물) ---
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# --- 크래시 덤프 ---
+hs_err_pid*
+replay_pid*
+
+# --- 비밀/자격증명(절대 올리지 않기) ---
+# 환경변수 파일
+.env
+.env.*
+
+# 앱 시크릿/개인 설정
+*.secret.*
+*secret*.properties
+*.properties.local
+
+# 인증서/키/스토어
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# --- Git ---
+.git/
+.gitignore
+
+# --- README, docs ---
+README.md
+*.md
+HELP.md
+
+# --- 기타 개발 도구 ---
+node_modules/
+package*.json
