@@ -1,5 +1,6 @@
 package com.kt.api_messaging_svc.service;
 
+import com.kt.api_messaging_svc.dto.MessageDashboardDataCreateRequest;
 import com.kt.api_messaging_svc.dto.MessageResponse;
 import com.kt.api_messaging_svc.entity.MessageRecipient;
 import com.kt.api_messaging_svc.entity.Messages;
@@ -7,17 +8,21 @@ import com.kt.api_messaging_svc.repository.MessageRecipientRepository;
 import com.kt.api_messaging_svc.repository.MessageRepository;
 import com.twilio.Twilio;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MessageService {
     private final MessageRepository messageRepository;
     private final MessageRecipientRepository messageRecipientRepository;
+    private final DashboardApiClient dashboardApiClient;
 
     @Value("${twilio.account-sid}")
     private String accountSid;
@@ -25,11 +30,10 @@ public class MessageService {
     @Value("${twilio.auth-token}")
     private String authToken;
 
+    @Value("${message.url}")
+    private String baseUrl; // API 주소
+
     private String from = "+15177656650";
-    public MessageService(MessageRepository messageRepository, MessageRecipientRepository messageRecipientRepository) {
-        this.messageRepository = messageRepository;
-        this.messageRecipientRepository = messageRecipientRepository;
-    }
 
     @Transactional
     public Messages sendManyMessage(String userEmail, String body, List<String> recipients) {
@@ -50,6 +54,10 @@ public class MessageService {
         for (String to : recipients) {
             LocalDateTime now = LocalDateTime.now();
 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            String formatted = now.format(formatter);
+
             try {
                 // Twilio 전송
                 com.twilio.rest.api.v2010.account.Message twilioMsg =
@@ -58,7 +66,7 @@ public class MessageService {
                                         new com.twilio.type.PhoneNumber(from),
                                         body
                                 )
-                                .setStatusCallback(URI.create("https://c58d52d7af88.ngrok-free.app/api/v1/messages/status"))
+                                .setStatusCallback(URI.create(baseUrl+"/api/v1/messages/status"))
                                 .create();
 
                 // 성공 → provider_sid만 세팅(나머지는 null 유지 가능)
@@ -75,6 +83,11 @@ public class MessageService {
                 messageRecipientRepository.save(recipient);
                 System.out.println("Sent to " + to + " | sid=" + twilioMsg.getSid());
 
+
+                MessageDashboardDataCreateRequest req =
+                        new MessageDashboardDataCreateRequest(userEmail, to, formatted, "delivered", twilioMsg.getSid());
+                dashboardApiClient.sendDashboardData(req);
+
             } catch (com.twilio.exception.ApiException e) {
                 // 실패 → 요구사항대로 기록
                 MessageRecipient failed = MessageRecipient.builder()
@@ -88,6 +101,10 @@ public class MessageService {
                         .build();
 
                 messageRecipientRepository.save(failed);
+
+                MessageDashboardDataCreateRequest req =
+                        new MessageDashboardDataCreateRequest(userEmail, to, formatted, "failed", null);
+                dashboardApiClient.sendDashboardData(req);
 
                 // 로그만 남기고 다음 번호 계속 처리
                 System.out.println("SMS send failed to "+to+": "+e.getMessage()+" (code="+e.getCode()+")");

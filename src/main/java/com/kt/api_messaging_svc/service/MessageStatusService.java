@@ -1,5 +1,7 @@
 package com.kt.api_messaging_svc.service;
 
+import com.kt.api_messaging_svc.dto.MessageDashboardDataCreateRequest;
+import com.kt.api_messaging_svc.dto.StatusUpdateRequest;
 import com.kt.api_messaging_svc.repository.MessageRecipientRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,17 +14,13 @@ import java.time.LocalDateTime;
 public class MessageStatusService {
 
     private final MessageRecipientRepository recipientRepository;
+    private final DashboardApiClient dashboardApiClient;
 
     @Transactional
     public void handleStatusCallback(String sid,
                                      String status,
                                      String errorCode,
                                      String errorMsg) {
-
-        if (!"delivered".equalsIgnoreCase(status) && !"failed".equalsIgnoreCase(status)
-                && !"undelivered".equalsIgnoreCase(status)) {
-            return;
-        }
 
         var optionalRecipient = recipientRepository.findByProviderSid(sid);
 
@@ -31,6 +29,11 @@ public class MessageStatusService {
 
             if ("delivered".equalsIgnoreCase(status)) {
                 rec.markDelivered(LocalDateTime.now());
+                // 상태변경 api 호출
+
+                StatusUpdateRequest req =
+                        new StatusUpdateRequest(sid, "delivered");
+                dashboardApiClient.sendDashboardData(req);
             } else {
                 String err = "";
                 if (errorCode != null && !errorCode.isBlank()) {
@@ -40,6 +43,10 @@ public class MessageStatusService {
                     err += errorMsg;
                 }
                 rec.markFailed(err);
+
+                StatusUpdateRequest req =
+                        new StatusUpdateRequest(sid, "failed");
+                dashboardApiClient.sendDashboardData(req);
             }
 
             recipientRepository.save(rec);
