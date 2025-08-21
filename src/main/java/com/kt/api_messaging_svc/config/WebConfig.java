@@ -14,7 +14,10 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // 모든 API 경로 허용
-                        .allowedOrigins("http://localhost:3000") // 프론트 주소
+                        .allowedOrigins(
+                            "https://web-frontend-ffasfgacfyceeagj.koreacentral-01.azurewebsites.net",
+                            "http://localhost:3000"
+                        ) // 프론트 주소
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
