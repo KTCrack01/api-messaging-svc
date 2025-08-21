@@ -69,7 +69,6 @@ public class MessageService {
                                 .setStatusCallback(URI.create(baseUrl+"/api/v1/messages/status"))
                                 .create();
 
-                // 성공 → provider_sid만 세팅(나머지는 null 유지 가능)
                 MessageRecipient recipient = MessageRecipient.builder()
                         .messages(messagesEntity)
                         .phoneNum(to)
@@ -83,7 +82,7 @@ public class MessageService {
                 messageRecipientRepository.save(recipient);
                 System.out.println("Sent to " + to + " | sid=" + twilioMsg.getSid());
 
-
+                // 메시지 전송 데이터 대시보드로 api로 전송
                 MessageDashboardDataCreateRequest req =
                         new MessageDashboardDataCreateRequest(userEmail, to, formatted, "delivered", twilioMsg.getSid());
                 dashboardApiClient.sendDashboardData(req);
