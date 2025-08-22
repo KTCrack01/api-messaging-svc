@@ -80,5 +80,7 @@ docker run --rm -p 8080:8080 \
 ## 보안 메모
 - 비밀번호는 `PasswordEncoder`로 해시 저장됩니다.
 - 토큰 인증(OAuth2/JWT)은 [ADR-006](../msa-project-hub/docs/adr/ADR-006-authentication-strategy.md)에 따라 추후 도입 예정입니다.
+- 시크릿/환경설정 관리: [ADR-012](../msa-project-hub/docs/adr/ADR-012-secret-and-config-management.md)
+- CORS 기준 정책: [ADR-013](../msa-project-hub/docs/adr/ADR-013-cors-baseline-policy.md)
 
 
